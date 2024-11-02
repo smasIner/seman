@@ -2,11 +2,12 @@
 
 package org.syntax.stella.Absyn;
 
-public abstract class Program implements java.io.Serializable {
-  public abstract <R,A> R accept(Program.Visitor<R,A> v, A arg);
-  public interface Visitor <R,A> {
-    public R visit(org.syntax.stella.Absyn.AProgram p, A arg);
+import org.syntax.stella.exceptions.MyException;
 
+public abstract class Program implements java.io.Serializable {
+  public abstract <R,A> R accept(Program.Visitor<R,A> v, A arg) throws MyException;
+  public interface Visitor <R,A> {
+    R visit(org.syntax.stella.Absyn.AProgram p, A arg) throws  MyException;
   }
 
 }
