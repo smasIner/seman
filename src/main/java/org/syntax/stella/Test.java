@@ -44,8 +44,8 @@ class BNFCErrorListener implements ANTLRErrorListener
 
 public class Test
 {
-  StellaLexer l;
-  StellaParser p;
+  stellaLexer l;
+  stellaParser p;
 
   public Test(String[] args)
   {
@@ -54,7 +54,7 @@ public class Test
       Reader input;
       if (args.length == 0) input = new InputStreamReader(System.in);
       else input = new FileReader(args[0]);
-      l = new StellaLexer(new ANTLRInputStream(input));
+      l = new stellaLexer(new ANTLRInputStream(input));
               l.addErrorListener(new BNFCErrorListener());
     }
     catch(IOException e)
@@ -62,7 +62,7 @@ public class Test
       System.err.println("Error: File not found: " + args[0]);
       System.exit(1);
     }
-    p = new StellaParser(new CommonTokenStream(l));
+    p = new stellaParser(new CommonTokenStream(l));
             p.addErrorListener(new BNFCErrorListener());
   }
 
@@ -79,7 +79,7 @@ public class Test
        patternBinding, listPatternBinding, type, listType,
        variantFieldType, listVariantFieldType, recordFieldType,
        listRecordFieldType, typing */
-    StellaParser.Start_ProgramContext pc = p.start_Program();
+    stellaParser.Start_ProgramContext pc = p.start_Program();
     org.syntax.stella.Absyn.Program ast = pc.result;
     System.out.println();
     System.out.println("Parse Successful!");
