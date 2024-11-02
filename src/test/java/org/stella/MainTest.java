@@ -3,6 +3,7 @@ package org.stella;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.*;
 import org.junit.jupiter.params.provider.*;
+import org.syntax.stella.exceptions.MyException;
 
 import static org.junit.jupiter.api.Assertions.*;
 import java.io.*;
@@ -49,8 +50,8 @@ class MainTest {
         final FileInputStream fips = new FileInputStream(filepath);
         System.setIn(fips);
 
-        // Change Exception class to your specific
-        Exception exception = assertThrows(Exception.class, () -> Main.main(args), "Expected the type checker to fail!");
+        // Changed Exception class to my specific
+        Exception exception = assertThrows(MyException.class, () -> Main.main(args), "Expected the type checker to fail!");
         System.out.println("Type Error: " + exception.getMessage());
     }
 }
