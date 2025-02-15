@@ -3,21 +3,32 @@ package org.stella;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.*;
 import org.junit.jupiter.params.provider.*;
-import org.syntax.stella.exceptions.MyException;
+import org.stella.typecheck.TypeError;
 
 import static org.junit.jupiter.api.Assertions.*;
 import java.io.*;
+import java.nio.file.*;
+import java.util.*;
+import java.util.stream.*;
 
 class MainTest {
 
+    static List<String> getAllFilesInSubdirectories(String rootDirectory, String subDirectory) throws IOException {
+        Path rootPath = Paths.get(rootDirectory);
+        if (!Files.exists(rootPath)) {
+            return Collections.emptyList();
+        }
+
+        try (Stream<Path> paths = Files.walk(rootPath)) {
+            return paths.filter(Files::isRegularFile)
+                    .filter(path -> path.toString().contains(File.separator + subDirectory + File.separator))
+                    .map(Path::toString)
+                    .collect(Collectors.toList());
+        }
+    }
 
     @ParameterizedTest(name = "{index} Typechecking well-typed program {0}")
-    @ValueSource(strings = {
-            "tests/well-typed/factorial.stella",
-            "tests/well-typed/squares.stella",
-            "tests/well-typed/higher-order-1.stella",
-            "tests/well-typed/increment_twice.stella",
-            "tests/well-typed/logical-operators.stella"})
+    @MethodSource("wellTypedFiles")
     void testWellTyped(String filepath) throws Exception {
         String[] args = new String[0];
         final InputStream original = System.in;
@@ -27,31 +38,24 @@ class MainTest {
         System.setIn(original);
     }
 
+    static Stream<String> wellTypedFiles() throws IOException {
+        return getAllFilesInSubdirectories("tests", "well-typed").stream();
+    }
+
     @ParameterizedTest(name = "{index} Typechecking ill-typed program {0}")
-    @ValueSource(strings = {
-            "tests/ill-typed/applying-non-function-1.stella",
-            "tests/ill-typed/applying-non-function-2.stella",
-            "tests/ill-typed/applying-non-function-3.stella",
-            "tests/ill-typed/argument-type-mismatch-1.stella",
-            "tests/ill-typed/argument-type-mismatch-2.stella",
-            "tests/ill-typed/argument-type-mismatch-3.stella",
-            "tests/ill-typed/bad-if-1.stella",
-            "tests/ill-typed/bad-if-2.stella",
-            "tests/ill-typed/bad-succ-1.stella",
-            "tests/ill-typed/bad-succ-2.stella",
-            "tests/ill-typed/bad-succ-3.stella",
-            "tests/ill-typed/shadowed-variable-1.stella",
-            "tests/ill-typed/undefined-variable-1.stella",
-            "tests/ill-typed/undefined-variable-2.stella",
-            "tests/ill-typed/bad-squares-1.stella",
-            "tests/ill-typed/bad-squares-2.stella"})
+    @MethodSource("illTypedFiles")
     void testIllTyped(String filepath) throws Exception {
         String[] args = new String[0];
         final FileInputStream fips = new FileInputStream(filepath);
         System.setIn(fips);
 
-        // Changed Exception class to my specific
-        Exception exception = assertThrows(MyException.class, () -> Main.main(args), "Expected the type checker to fail!");
+        // Expecting a TypeError for ill-typed files
+        Exception exception = assertThrows(TypeError.class, () -> Main.main(args), "Expected the type checker to fail!");
         System.out.println("Type Error: " + exception.getMessage());
     }
+
+    static Stream<String> illTypedFiles() throws IOException {
+        return getAllFilesInSubdirectories("tests", "ill-typed").stream();
+    }
 }
+

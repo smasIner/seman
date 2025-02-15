@@ -2,8 +2,6 @@
 
 package org.syntax.stella.Absyn;
 
-import org.syntax.stella.exceptions.MyException;
-
 public class AProgram  extends Program {
   public final LanguageDecl languagedecl_;
   public final ListExtension listextension_;
@@ -11,7 +9,7 @@ public class AProgram  extends Program {
   public int line_num, col_num, offset;
   public AProgram(LanguageDecl p1, ListExtension p2, ListDecl p3) { languagedecl_ = p1; listextension_ = p2; listdecl_ = p3; }
 
-  public <R,A> R accept(org.syntax.stella.Absyn.Program.Visitor<R,A> v, A arg) throws MyException { return v.visit(this, arg); }
+  public <R,A> R accept(org.syntax.stella.Absyn.Program.Visitor<R,A> v, A arg) { return v.visit(this, arg); }
 
   public boolean equals(java.lang.Object o) {
     if (this == o) return true;

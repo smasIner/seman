@@ -6,7 +6,7 @@ import org.antlr.v4.runtime.atn.*;
 import org.antlr.v4.runtime.dfa.*;
 import java.util.*;
 
-import org.stella.typecheck.TypeCheck;
+import org.stella.typecheck.TypeChecker;
 import org.syntax.stella.*;
 import org.syntax.stella.Absyn.*;
 import org.stella.eval.*;
@@ -56,7 +56,7 @@ public class Main
         try
         {
             Program ast = t.parse();
-            TypeCheck.typecheckProgram(ast);
+            TypeChecker.typeCheckProgram(ast);
 
             if (args.length > 0) {
                 stellaLexer l;

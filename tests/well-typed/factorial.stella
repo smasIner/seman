@@ -22,7 +22,7 @@ fn Nat::mul(n : Nat) -> (fn(Nat) -> Nat) {
 
 // factorial via primitive recursion
 fn factorial(n : Nat) -> Nat {
-  return Nat::rec(n, 1, fn(i : Nat) {
+  return Nat::rec(n, succ(0), fn(i : Nat) {
     return fn(r : Nat) {
     return Nat::mul(r)(succ(i));  // r := r * (i + 1)
   }; });
